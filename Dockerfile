@@ -5,11 +5,14 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # Copia el archivo de requisitos al contenedor
-COPY . /app
+#COPY . /app
 COPY requirements.txt .
 
 # Instala las dependencias en el contenedor
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Copia todo el código fuente al contenedor
+COPY . .
 
 # Exponer el puerto que usará FastAPI
 EXPOSE 8000
