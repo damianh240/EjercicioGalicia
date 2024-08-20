@@ -1,0 +1,38 @@
+# app/main.py
+from fastapi import FastAPI, Depends, HTTPException
+from sqlalchemy.orm import Session
+from . import crud, models, schemas
+from .database import engine, SessionLocal, Base
+
+app = FastAPI()
+
+# Crear las tablas en la base de datos
+models.Base.metadata.create_all(bind=engine)
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+@app.get("/")
+def index():
+    return {"message" : "Ejercicio Galicia"}
+
+@app.post("/workers/", response_model=schemas.Worker)
+def create_worker(worker: schemas.WorkerCreate, db: Session = Depends(get_db)):
+    return crud.create_worker(db=db, worker=worker)
+
+@app.get("/workers/", response_model=list[schemas.Worker])
+def read_workers(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+    workers = crud.get_workers(db, skip=skip, limit=limit)
+    return workers
+
+@app.get("/workers/{worker_id}", response_model=schemas.Worker)
+def read_worker(worker_id: int, db: Session =
+                 Depends(get_db)):
+    worker = crud.get_worker(db, worker_id=worker_id)
+    if worker is None:
+        raise HTTPException(status_code=404, detail="Worker not found")
+    return worker
