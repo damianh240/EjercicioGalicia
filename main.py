@@ -1,5 +1,6 @@
 # app/main.py
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 import crud
 import models
@@ -20,7 +21,8 @@ def get_db():
 
 @app.get("/")
 def index():
-    return {"message" : "Ejercicio Galicia"}
+    return RedirectResponse(url="/docs")
+    #return {"message" : "Ejercicio Galicia"}
 
 @app.post("/workers/", response_model=schemas.Worker)
 def create_worker(worker: schemas.WorkerCreate, db: Session = Depends(get_db)):
