@@ -1,6 +1,7 @@
 # app/crud.py
 from sqlalchemy.orm import Session
-from . import models, schemas
+import models
+import schemas
 
 def get_worker(db: Session, worker_id: int):
     return db.query(models.Worker).filter(models.Worker.id == worker_id).first()
