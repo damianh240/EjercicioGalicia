@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 import crud
 import models
 import schemas
-from .database import engine, SessionLocal, Base
+from database import engine, SessionLocal, Base
 
 app = FastAPI()
 
