@@ -40,3 +40,18 @@ def read_worker(worker_id: int, db: Session =
     if worker is None:
         raise HTTPException(status_code=404, detail="Worker not found")
     return worker
+
+@app.put("/workers/{worker_id}", response_model=schemas.Worker)
+def update_worker(worker_id: int, worker_update: schemas.WorkerUpdate, db: Session = Depends(get_db)):
+    db_worker = crud.update_worker(db=db, worker_id=worker_id, worker_update=worker_update)
+    if db_worker is None:
+        raise HTTPException(status_code=404, detail="Worker not found")
+    return db_worker
+
+# Ruta para eliminar un trabajador
+@app.delete("/workers/{worker_id}", response_model=schemas.Worker)
+def delete_worker(worker_id: int, db: Session = Depends(get_db)):
+    db_worker = crud.delete_worker(db, worker_id=worker_id)
+    if db_worker is None:
+        raise HTTPException(status_code=404, detail="Worker not found")
+    return db_worker
